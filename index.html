@@ -153,13 +153,18 @@
             align-items: center;
             justify-content: center;
             font-family: 'Kiwi Maru', serif;
-            font-size: 3.2rem;
+            
+            /* --- 修正: フォントサイズをレスポンシブかつ少し小さめに調整 --- */
+            /* 最大2.8rem, 画面幅の11%を上限とする */
+            font-size: min(2.8rem, 11vw);
+            
             font-weight: 500;
             line-height: 1;
             color: #1e293b;
             position: relative;
             aspect-ratio: 1 / 1;
-            padding-bottom: 0.1em;
+            /* パディングを削除して中央揃えを優先 */
+            padding-bottom: 0; 
             overflow: visible;
         }
 
@@ -448,7 +453,7 @@
 
     <script>
         // --- 状態管理 ---
-        const APP_ID = 'hissan_master_final_v23_fix_scroll'; 
+        const APP_ID = 'hissan_master_final_v24_font_fix'; 
         const MAX_LEVEL = 10;
 
         let audioCtx = null;
@@ -745,8 +750,8 @@
         }
 
         function startGame() {
-            document.getElementById('start-screen').classList.add('hidden'); // hiddenを付与
-            document.getElementById('game-ui').classList.remove('hidden'); // hiddenを削除
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('game-ui').classList.remove('hidden');
             generateProblem();
         }
 
