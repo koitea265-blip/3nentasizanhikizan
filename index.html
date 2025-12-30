@@ -16,10 +16,13 @@
             background-color: #f0fdf4; /* green-50 */
             background-image: radial-gradient(#dcfce7 1px, transparent 1px);
             background-size: 20px 20px;
-            overflow: hidden;
-            touch-action: none;
+            /* スクロールとタッチ操作を許可 */
+            overflow-y: auto; 
+            touch-action: pan-y;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+            min-height: 100vh;
+            padding-bottom: 20px; /* 下部に余白 */
         }
         
         .number-font {
@@ -252,22 +255,22 @@
         /* レベル選択プルダウンの強制最前面化 */
         select#level-select {
             pointer-events: auto !important;
-            z-index: 200 !important; /* キャラ(10)やボタン(100)より上 */
+            z-index: 200 !important;
             position: relative;
-            background-color: #fff; /* 背景色を確保して透過防止 */
-            -webkit-appearance: menulist-button; /* スマホでの見た目安定 */
+            background-color: #fff;
+            -webkit-appearance: menulist-button;
         }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-2 sm:p-4">
 
-    <!-- アプリコンテナ -->
-    <div id="app" class="bg-white/95 backdrop-blur-sm p-3 rounded-[2rem] shadow-2xl border-4 border-green-200 w-full h-[95vh] max-h-[800px] max-w-md flex flex-col relative overflow-hidden">
+    <!-- アプリコンテナ (高さを固定せず、中身に合わせて伸びるように変更) -->
+    <div id="app" class="bg-white/95 backdrop-blur-sm p-3 rounded-[2rem] shadow-2xl border-4 border-green-200 w-full min-h-[90vh] md:max-h-[850px] max-w-md flex flex-col relative overflow-visible my-4">
 
         <!-- ====================
-             スタート画面
+             スタート画面 (absoluteをやめ、通常配置に変更)
         ==================== -->
-        <div id="start-screen" class="absolute inset-0 z-[50] bg-white flex flex-col items-center justify-between p-4 pb-8 text-center rounded-[2rem]">
+        <div id="start-screen" class="w-full flex flex-col items-center justify-between p-4 pb-8 text-center rounded-[2rem] min-h-full">
             <div class="mt-4 w-full flex flex-col items-center">
                 <span class="inline-block bg-green-500 text-white text-sm font-bold px-4 py-1.5 rounded-full mb-3 shadow-md tracking-wider">
                     算数ドリル
@@ -285,7 +288,7 @@
                 <button class="bubble-btn w-16 h-16 bg-orange-50 rounded-2xl text-3xl flex items-center justify-center border-2 border-orange-100 hover:border-orange-300 ring-offset-2 focus:ring-2 ring-orange-200" onclick="selectChar('🧸', 'クマさん')">🧸</button>
             </div>
 
-            <div class="flex flex-col items-center w-full flex-grow justify-center relative">
+            <div class="flex flex-col items-center w-full flex-grow justify-center relative my-4">
                 <!-- 吹き出し -->
                 <div class="speech-bubble mb-6 w-64 min-h-[60px] flex items-center justify-center z-20 pointer-events-none">
                     <p id="start-char-talk" class="text-gray-700 font-bold text-sm leading-snug">筆算ならまかせて！</p>
@@ -322,7 +325,7 @@
                 </div>
             </div>
 
-            <button class="bubble-btn w-full h-16 bg-gradient-to-r from-green-400 to-teal-500 text-white text-2xl font-bold rounded-2xl shadow-lg shadow-green-200/50 mt-2 flex items-center justify-center gap-2 relative z-50" onclick="startGame()">
+            <button class="bubble-btn w-full h-16 bg-gradient-to-r from-green-400 to-teal-500 text-white text-2xl font-bold rounded-2xl shadow-lg shadow-green-200/50 mt-2 flex items-center justify-center gap-2 relative z-50 mb-4" onclick="startGame()">
                 <span class="text-3xl">▶</span> スタート！
             </button>
         </div>
@@ -330,7 +333,7 @@
         <!-- ====================
              ゲーム画面 (筆算)
         ==================== -->
-        <div id="game-ui" class="hidden h-full flex flex-col justify-between relative">
+        <div id="game-ui" class="hidden w-full flex flex-col justify-between relative min-h-full">
             
             <!-- 正解の赤丸レイヤー -->
             <div id="correct-mark" class="hidden">
@@ -380,7 +383,7 @@
             </div>
 
             <!-- メインエリア -->
-            <div class="flex-grow flex flex-col items-center relative z-10 overflow-y-auto">
+            <div class="flex-grow flex flex-col items-center relative z-10">
                 
                 <!-- 問題表示エリア -->
                 <div class="w-full flex justify-center items-center mb-1 px-1 py-2">
@@ -426,7 +429,7 @@
                     <button class="num-key enter-key" onclick="checkAnswer()">OK</button>
                 </div>
 
-                <div class="h-1"></div>
+                <div class="h-4"></div>
             </div>
         </div>
 
@@ -445,7 +448,7 @@
 
     <script>
         // --- 状態管理 ---
-        const APP_ID = 'hissan_master_final_v22_fix_all'; 
+        const APP_ID = 'hissan_master_final_v23_fix_scroll'; 
         const MAX_LEVEL = 10;
 
         let audioCtx = null;
@@ -742,8 +745,8 @@
         }
 
         function startGame() {
-            document.getElementById('start-screen').classList.add('hidden');
-            document.getElementById('game-ui').classList.remove('hidden');
+            document.getElementById('start-screen').classList.add('hidden'); // hiddenを付与
+            document.getElementById('game-ui').classList.remove('hidden'); // hiddenを削除
             generateProblem();
         }
 
